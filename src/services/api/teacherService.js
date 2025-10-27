@@ -219,7 +219,4 @@ export const teacherService = {
     }
   }
 };
-
 export default teacherService;
-
-export { teacherService };
