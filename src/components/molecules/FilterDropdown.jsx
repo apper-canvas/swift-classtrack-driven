@@ -7,7 +7,7 @@ const FilterDropdown = ({ label, value, onChange, options, placeholder = "All" }
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
-<option key="placeholder" value="">{placeholder}</option>
+<option key="filter-placeholder" value="">{placeholder}</option>
         {options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}
