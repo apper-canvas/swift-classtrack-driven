@@ -9,6 +9,7 @@ import AttendanceRate from "@/components/molecules/AttendanceRate";
 import { gradeService } from "@/services/api/gradeService";
 import { attendanceService } from "@/services/api/attendanceService";
 import { format } from "date-fns";
+import Chart from "react-apexcharts";
 
 const StudentDetail = ({ isOpen, onClose, student }) => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -171,61 +172,189 @@ const StudentDetail = ({ isOpen, onClose, student }) => {
             </div>
           )}
 
-          {activeTab === "grades" && (
+{activeTab === "grades" && (
             <div className="space-y-6">
               {loading ? (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {[...Array(5)].map((_, i) => (
                     <div key={i} className="bg-gray-100 h-16 rounded-lg animate-pulse"></div>
                   ))}
                 </div>
               ) : grades.length > 0 ? (
-                <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Subject
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Score
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Grade
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Date
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {grades.map(grade => {
-                        const percentage = Math.round((grade.score / grade.maxScore) * 100);
-                        const letterGrade = percentage >= 90 ? "A" : percentage >= 80 ? "B" : percentage >= 70 ? "C" : percentage >= 60 ? "D" : "F";
-                        const gradeVariant = percentage >= 80 ? "success" : percentage >= 70 ? "warning" : "error";
-                        
-                        return (
-                          <tr key={grade.Id}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                              {grade.subject}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {grade.score}/{grade.maxScore}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <Badge variant={gradeVariant}>
-                                {letterGrade} ({percentage}%)
-                              </Badge>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                              {format(new Date(grade.date), "MMM dd, yyyy")}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                <>
+                  {/* Grade Progression Chart */}
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                      <ApperIcon name="TrendingUp" className="w-5 h-5 mr-2 text-primary" />
+                      Grade Progression Over Time
+                    </h4>
+                    <Chart
+                      options={{
+                        chart: {
+                          type: "line",
+                          height: 300,
+                          toolbar: {
+                            show: true,
+                            tools: {
+                              download: true,
+                              zoom: true,
+                              zoomin: true,
+                              zoomout: true,
+                              pan: true,
+                              reset: true
+                            }
+                          },
+                          animations: {
+                            enabled: true,
+                            easing: "easeinout",
+                            speed: 800
+                          }
+                        },
+                        stroke: {
+                          curve: "smooth",
+                          width: 3
+                        },
+                        colors: ["#2563eb", "#10b981", "#f59e0b", "#8b5cf6", "#ef4444"],
+                        xaxis: {
+                          type: "datetime",
+                          labels: {
+                            format: "MMM dd",
+                            style: {
+                              colors: "#64748b",
+                              fontSize: "12px"
+                            }
+                          }
+                        },
+                        yaxis: {
+                          min: 0,
+                          max: 100,
+                          labels: {
+                            formatter: (value) => `${Math.round(value)}%`,
+                            style: {
+                              colors: "#64748b",
+                              fontSize: "12px"
+                            }
+                          },
+                          title: {
+                            text: "Grade (%)",
+                            style: {
+                              color: "#64748b",
+                              fontSize: "14px",
+                              fontWeight: 600
+                            }
+                          }
+                        },
+                        tooltip: {
+                          x: {
+                            format: "MMM dd, yyyy"
+                          },
+                          y: {
+                            formatter: (value) => `${Math.round(value)}%`
+                          }
+                        },
+                        legend: {
+                          position: "top",
+                          horizontalAlign: "left",
+                          fontSize: "14px",
+                          fontWeight: 500,
+                          markers: {
+                            width: 12,
+                            height: 12,
+                            radius: 6
+                          }
+                        },
+                        grid: {
+                          borderColor: "#e5e7eb",
+                          strokeDashArray: 4
+                        },
+                        markers: {
+                          size: 5,
+                          hover: {
+                            size: 7
+                          }
+                        },
+                        fill: {
+                          type: "gradient",
+                          gradient: {
+                            shadeIntensity: 1,
+                            opacityFrom: 0.4,
+                            opacityTo: 0.1,
+                            stops: [0, 90, 100]
+                          }
+                        }
+                      }}
+                      series={(() => {
+                        const gradesBySubject = grades.reduce((acc, grade) => {
+                          if (!acc[grade.subject]) acc[grade.subject] = [];
+                          acc[grade.subject].push(grade);
+                          return acc;
+                        }, {});
+
+                        Object.keys(gradesBySubject).forEach(subject => {
+                          gradesBySubject[subject].sort((a, b) => new Date(a.date) - new Date(b.date));
+                        });
+
+                        return Object.entries(gradesBySubject).map(([subject, subjectGrades]) => ({
+                          name: subject,
+                          data: subjectGrades.map(g => ({
+                            x: new Date(g.date).getTime(),
+                            y: Math.round((g.score / g.maxScore) * 100)
+                          }))
+                        }));
+                      })()}
+                      type="line"
+                      height={300}
+                    />
+                  </div>
+
+                  {/* Grade Table */}
+                  <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Subject
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Score
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Grade
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Date
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {grades.map(grade => {
+                          const percentage = Math.round((grade.score / grade.maxScore) * 100);
+                          const letterGrade = percentage >= 90 ? "A" : percentage >= 80 ? "B" : percentage >= 70 ? "C" : percentage >= 60 ? "D" : "F";
+                          const gradeVariant = percentage >= 80 ? "success" : percentage >= 70 ? "warning" : "error";
+                          
+                          return (
+                            <tr key={grade.Id}>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {grade.subject}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {grade.score}/{grade.maxScore}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <Badge variant={gradeVariant}>
+                                  {letterGrade} ({percentage}%)
+                                </Badge>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {format(new Date(grade.date), "MMM dd, yyyy")}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
               ) : (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
