@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/layouts/Root";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import SearchBar from "@/components/molecules/SearchBar";
 
 const Header = () => {
-const location = useLocation();
+  const location = useLocation();
+  const { logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const navItems = [
     { path: "", label: "Students", icon: "GraduationCap" },
     { path: "teachers", label: "Teachers", icon: "Users" },
@@ -46,10 +47,19 @@ const location = useLocation();
                 <span>{item.label}</span>
               </Link>
             ))}
-          </nav>
+</nav>
 
-{/* Search and Actions */}
+          {/* Actions */}
           <div className="flex items-center space-x-4">
+            {/* Logout Button */}
+            <button
+              onClick={() => logout()}
+              className="hidden md:flex items-center px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary hover:bg-gray-100 rounded-md transition-colors"
+            >
+              <ApperIcon name="LogOut" className="w-4 h-4 mr-2" />
+              Logout
+            </button>
+            
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

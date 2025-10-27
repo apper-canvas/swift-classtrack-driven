@@ -9,48 +9,48 @@ import StudentAvatar from "@/components/molecules/StudentAvatar";
 
 const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    department: "",
-    specialization: "",
-    qualifications: "",
-    experienceYears: 0,
-    hireDate: "",
-    employmentStatus: "full-time",
-    photoUrl: ""
+    first_name_c: "",
+    last_name_c: "",
+    email_c: "",
+    phone_c: "",
+    department_c: "",
+    specialization_c: "",
+    qualifications_c: "",
+    experience_years_c: 0,
+    hire_date_c: "",
+    employment_status_c: "full-time",
+    photo_url_c: ""
   });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (teacher && mode === "edit") {
+if (teacher && mode === "edit") {
       setFormData({
-        firstName: teacher.firstName || "",
-        lastName: teacher.lastName || "",
-        email: teacher.email || "",
-        phone: teacher.phone || "",
-        department: teacher.department || "",
-        specialization: teacher.specialization || "",
-        qualifications: teacher.qualifications || "",
-        experienceYears: teacher.experienceYears || 0,
-        hireDate: teacher.hireDate || "",
-        employmentStatus: teacher.employmentStatus || "full-time",
-        photoUrl: teacher.photoUrl || ""
+        first_name_c: teacher.first_name_c || "",
+        last_name_c: teacher.last_name_c || "",
+        email_c: teacher.email_c || "",
+        phone_c: teacher.phone_c || "",
+        department_c: teacher.department_c || "",
+        specialization_c: teacher.specialization_c || "",
+        qualifications_c: teacher.qualifications_c || "",
+        experience_years_c: teacher.experience_years_c || 0,
+        hire_date_c: teacher.hire_date_c || "",
+        employment_status_c: teacher.employment_status_c || "full-time",
+        photo_url_c: teacher.photo_url_c || ""
       });
     } else if (mode === "create") {
       setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        department: "",
-        specialization: "",
-        qualifications: "",
-        experienceYears: 0,
-        hireDate: "",
-        employmentStatus: "full-time",
-        photoUrl: ""
+        first_name_c: "",
+        last_name_c: "",
+        email_c: "",
+        phone_c: "",
+        department_c: "",
+        specialization_c: "",
+        qualifications_c: "",
+        experience_years_c: 0,
+        hire_date_c: "",
+        employment_status_c: "full-time",
+        photo_url_c: ""
       });
     }
   }, [teacher, mode, isOpen]);
@@ -100,9 +100,9 @@ const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => 
           {/* Photo Section */}
           <div className="flex items-center space-x-4">
             <StudentAvatar
-              photoUrl={formData.photoUrl}
-              firstName={formData.firstName}
-              lastName={formData.lastName}
+photoUrl={formData.photo_url_c}
+              firstName={formData.first_name_c}
+              lastName={formData.last_name_c}
               size="xl"
             />
             <div className="flex-1">
@@ -110,7 +110,8 @@ const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => 
               <Input
                 type="url"
                 placeholder="https://example.com/photo.jpg"
-                value={formData.photoUrl}
+value={formData.photo_url_c}
+                onChange={(e) => handleChange("photo_url_c", e.target.value)}
                 onChange={(e) => handleChange("photoUrl", e.target.value)}
               />
               <p className="text-xs text-gray-500 mt-1">
@@ -126,18 +127,19 @@ const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => 
               <Input
                 type="text"
                 required
-                placeholder="Enter first name"
-                value={formData.firstName}
-                onChange={(e) => handleChange("firstName", e.target.value)}
+placeholder="Enter first name"
+                value={formData.first_name_c}
+                onChange={(e) => handleChange("first_name_c", e.target.value)}
               />
             </div>
             <div>
               <Label>Last Name *</Label>
               <Input
-                type="text"
+type="text"
                 required
                 placeholder="Enter last name"
-                value={formData.lastName}
+                value={formData.last_name_c}
+                onChange={(e) => handleChange("last_name_c", e.target.value)}
                 onChange={(e) => handleChange("lastName", e.target.value)}
               />
             </div>
@@ -147,10 +149,12 @@ const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label>Email *</Label>
-              <Input
+<Input
                 type="email"
                 required
                 placeholder="teacher@school.edu"
+                value={formData.email_c}
+                onChange={(e) => handleChange("email_c", e.target.value)}
                 value={formData.email}
                 onChange={(e) => handleChange("email", e.target.value)}
               />
@@ -158,10 +162,10 @@ const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => 
             <div>
               <Label>Phone</Label>
               <Input
-                type="tel"
+type="tel"
                 placeholder="(555) 123-4567"
-                value={formData.phone}
-                onChange={(e) => handleChange("phone", e.target.value)}
+                value={formData.phone_c}
+                onChange={(e) => handleChange("phone_c", e.target.value)}
               />
             </div>
           </div>
@@ -171,8 +175,8 @@ const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => 
             <div>
               <Label>Department</Label>
               <Select
-                value={formData.department}
-                onChange={(e) => handleChange("department", e.target.value)}
+value={formData.department_c}
+                onChange={(e) => handleChange("department_c", e.target.value)}
               >
                 <option value="">Select department</option>
                 <option value="Mathematics">Mathematics</option>
@@ -186,10 +190,10 @@ const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => 
             <div>
               <Label>Specialization</Label>
               <Input
-                type="text"
+type="text"
                 placeholder="e.g., Algebra & Calculus"
-                value={formData.specialization}
-                onChange={(e) => handleChange("specialization", e.target.value)}
+                value={formData.specialization_c}
+                onChange={(e) => handleChange("specialization_c", e.target.value)}
               />
             </div>
           </div>
@@ -200,8 +204,8 @@ const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => 
             <Input
               type="text"
               placeholder="e.g., M.Ed. Mathematics, B.Sc. Mathematics"
-              value={formData.qualifications}
-              onChange={(e) => handleChange("qualifications", e.target.value)}
+value={formData.qualifications_c}
+              onChange={(e) => handleChange("qualifications_c", e.target.value)}
             />
           </div>
 
@@ -213,23 +217,23 @@ const TeacherModal = ({ isOpen, onClose, teacher, onSave, mode = "create" }) => 
                 type="number"
                 min="0"
                 placeholder="0"
-                value={formData.experienceYears}
-                onChange={(e) => handleChange("experienceYears", parseInt(e.target.value) || 0)}
+value={formData.experience_years_c}
+                onChange={(e) => handleChange("experience_years_c", parseInt(e.target.value) || 0)}
               />
             </div>
             <div>
               <Label>Hire Date</Label>
               <Input
                 type="date"
-                value={formData.hireDate}
-                onChange={(e) => handleChange("hireDate", e.target.value)}
+value={formData.hire_date_c}
+                onChange={(e) => handleChange("hire_date_c", e.target.value)}
               />
             </div>
             <div>
               <Label>Employment Status</Label>
               <Select
-                value={formData.employmentStatus}
-                onChange={(e) => handleChange("employmentStatus", e.target.value)}
+value={formData.employment_status_c}
+                onChange={(e) => handleChange("employment_status_c", e.target.value)}
               >
                 <option value="full-time">Full-time</option>
                 <option value="part-time">Part-time</option>

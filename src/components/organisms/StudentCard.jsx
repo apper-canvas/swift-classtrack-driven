@@ -38,22 +38,22 @@ const StudentCard = ({ student, onView, onEdit, onDelete }) => {
       {/* Student Info Header */}
       <div className="flex items-center space-x-3 mb-4">
         <StudentAvatar 
-          photoUrl={student.photoUrl}
-          firstName={student.firstName}
-          lastName={student.lastName}
+photoUrl={student.photo_url_c}
+          firstName={student.first_name_c}
+          lastName={student.last_name_c}
         />
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 truncate">
-            {student.firstName} {student.lastName}
+{student.first_name_c} {student.last_name_c}
           </h3>
-          <p className="text-sm text-gray-500">{student.studentId}</p>
+          <p className="text-sm text-gray-500">{student.student_id_c}</p>
           <div className="flex items-center space-x-2 mt-1">
-            <Badge variant="info">Grade {student.grade}</Badge>
-            <Badge variant="default">Section {student.section}</Badge>
+            <Badge variant="info">Grade {student.grade_c}</Badge>
+            <Badge variant="default">Section {student.section_c}</Badge>
           </div>
         </div>
-        <Badge variant={student.status === "active" ? "success" : "error"}>
-          {student.status}
+        <Badge variant={student.status_c === "active" ? "success" : "error"}>
+          {student.status_c}
         </Badge>
       </div>
 
@@ -79,10 +79,10 @@ const StudentCard = ({ student, onView, onEdit, onDelete }) => {
 
       {/* Contact Info */}
       <div className="space-y-2 mb-4">
-        {student.email && (
+{student.email_c && (
           <div className="flex items-center text-sm text-gray-600">
             <ApperIcon name="Mail" className="w-4 h-4 mr-2 text-gray-400" />
-            <span className="truncate">{student.email}</span>
+            <span className="truncate">{student.email_c}</span>
           </div>
         )}
         {student.phone && (

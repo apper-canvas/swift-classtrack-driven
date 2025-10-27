@@ -41,30 +41,28 @@ const Dashboard = () => {
   if (loading) return <Loading />;
   if (error) return <Error message={error} onRetry={loadDashboardData} />;
 
-  // Calculate statistics
+// Calculate statistics
   const totalStudents = students.length;
-  const activeStudents = students.filter(s => s.status === "active").length;
-  
+  const activeStudents = students.filter(s => s.status_c === "active").length;
   const averageGrade = grades.length > 0 
-    ? grades.reduce((sum, grade) => sum + (grade.score / grade.maxScore * 100), 0) / grades.length
+? grades.reduce((sum, grade) => sum + (grade.score_c / grade.max_score_c * 100), 0) / grades.length
     : 0;
-
   const todayAttendance = attendance.filter(a => a.date === format(new Date(), "yyyy-MM-dd"));
-  const presentToday = todayAttendance.filter(a => a.status === "present").length;
+const presentToday = todayAttendance.filter(a => a.status_c === "present").length;
   const totalAttendanceToday = todayAttendance.length;
   const attendanceRate = totalAttendanceToday > 0 ? (presentToday / totalAttendanceToday * 100) : 0;
 
   // Grade distribution
-  const gradeDistribution = grades.reduce((acc, grade) => {
-    const percentage = (grade.score / grade.maxScore) * 100;
+const gradeDistribution = grades.reduce((acc, grade) => {
+    const percentage = (grade.score_c / grade.max_score_c) * 100;
     const letterGrade = percentage >= 90 ? "A" : percentage >= 80 ? "B" : percentage >= 70 ? "C" : percentage >= 60 ? "D" : "F";
     acc[letterGrade] = (acc[letterGrade] || 0) + 1;
     return acc;
   }, {});
 
   // Recent attendance
-  const recentAttendance = attendance
-    .filter(a => new Date(a.date) >= subDays(new Date(), 7))
+const recentAttendance = attendance
+    .filter(a => new Date(a.date_c) >= subDays(new Date(), 7))
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 10);
 
@@ -238,7 +236,7 @@ const Dashboard = () => {
           {recentAttendance.length > 0 ? (
             <div className="space-y-3 max-h-80 overflow-y-auto">
               {recentAttendance.map(record => {
-                const student = students.find(s => s.Id.toString() === record.studentId);
+const student = students.find(s => s.Id.toString() === record.student_id_c);
                 if (!student) return null;
 
                 return (
@@ -246,26 +244,26 @@ const Dashboard = () => {
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                         <span className="text-xs font-medium text-gray-700">
-                          {student.firstName[0]}{student.lastName[0]}
+{student.first_name_c?.[0]}{student.last_name_c?.[0]}
                         </span>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-900">
-                          {student.firstName} {student.lastName}
+{student.first_name_c} {student.last_name_c}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {format(new Date(record.date), "MMM dd, yyyy")}
+{format(new Date(record.date_c), "MMM dd, yyyy")}
                         </p>
                       </div>
                     </div>
                     <Badge
-                      variant={
-                        record.status === "present" ? "success" :
-                        record.status === "late" ? "warning" :
+variant={
+                        record.status_c === "present" ? "success" :
+                        record.status_c === "late" ? "warning" :
                         "error"
                       }
                     >
-                      {record.status}
+                      {record.status_c}
                     </Badge>
                   </div>
                 );
@@ -293,9 +291,9 @@ const Dashboard = () => {
             <h4 className="text-sm font-medium text-gray-700 mb-3">Subjects Taught</h4>
             <div className="space-y-2">
               {[...new Set(grades.map(g => g.subject))].slice(0, 5).map(subject => {
-                const subjectGrades = grades.filter(g => g.subject === subject);
-                const avgScore = subjectGrades.length > 0 
-                  ? subjectGrades.reduce((sum, g) => sum + (g.score / g.maxScore * 100), 0) / subjectGrades.length
+const subjectGrades = grades.filter(g => g.subject_c === subject);
+                const avgScore = subjectGrades.length > 0
+                  ? subjectGrades.reduce((sum, g) => sum + (g.score_c / g.max_score_c * 100), 0) / subjectGrades.length
                   : 0;
                 
                 return (
@@ -314,7 +312,7 @@ const Dashboard = () => {
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-3">Grade Levels</h4>
             <div className="space-y-2">
-              {[...new Set(students.map(s => s.grade))].map(grade => {
+{[...new Set(students.map(s => s.grade_c))].map(grade => {
                 const gradeStudents = students.filter(s => s.grade === grade);
                 return (
                   <div key={grade} className="flex items-center justify-between">
@@ -331,7 +329,7 @@ const Dashboard = () => {
             <h4 className="text-sm font-medium text-gray-700 mb-3">Sections</h4>
             <div className="space-y-2">
               {[...new Set(students.map(s => s.section))].map(section => {
-                const sectionStudents = students.filter(s => s.section === section);
+const sectionStudents = students.filter(s => s.section_c === section);
                 return (
                   <div key={section} className="flex items-center justify-between">
                     <span className="text-sm text-gray-600">Section {section}</span>

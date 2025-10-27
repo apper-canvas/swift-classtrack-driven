@@ -93,19 +93,19 @@ const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   };
 
   // Filter students based on search term
-  const filteredStudents = useMemo(() => {
+const filteredStudents = useMemo(() => {
     if (!searchTerm) return students;
     
     return students.filter(student => {
-      const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
+      const fullName = `${student.first_name_c || ""} ${student.last_name_c || ""}`.toLowerCase();
       const searchLower = searchTerm.toLowerCase();
       
       return (
         fullName.includes(searchLower) ||
-        student.studentId.toLowerCase().includes(searchLower) ||
-        student.email?.toLowerCase().includes(searchLower) ||
-        student.grade.includes(searchTerm) ||
-        student.section.toLowerCase().includes(searchLower)
+        student.student_id_c?.toLowerCase().includes(searchLower) ||
+        student.email_c?.toLowerCase().includes(searchLower) ||
+        student.grade_c?.includes(searchTerm) ||
+        student.section_c?.toLowerCase().includes(searchLower)
       );
     });
   }, [students, searchTerm]);
@@ -199,8 +199,8 @@ if (students.length === 0) {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Confirm Delete</h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to delete {deleteConfirm.firstName} {deleteConfirm.lastName}? 
+<p className="text-gray-600 mb-6">
+              Are you sure you want to delete {deleteConfirm.first_name_c} {deleteConfirm.last_name_c}?
               This action cannot be undone.
             </p>
             <div className="flex space-x-3 justify-end">

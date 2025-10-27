@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
-import Badge from "@/components/atoms/Badge";
-import StudentAvatar from "@/components/molecules/StudentAvatar";
-import GradeDisplay from "@/components/molecules/GradeDisplay";
-import AttendanceRate from "@/components/molecules/AttendanceRate";
 import { gradeService } from "@/services/api/gradeService";
 import { attendanceService } from "@/services/api/attendanceService";
 import { format } from "date-fns";
 import Chart from "react-apexcharts";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
+import AttendanceRate from "@/components/molecules/AttendanceRate";
+import StudentAvatar from "@/components/molecules/StudentAvatar";
+import GradeDisplay from "@/components/molecules/GradeDisplay";
 
 const StudentDetail = ({ isOpen, onClose, student }) => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -56,22 +56,22 @@ const StudentDetail = ({ isOpen, onClose, student }) => {
         <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-primary to-blue-600 text-white">
           <div className="flex items-center space-x-4">
             <StudentAvatar
-              photoUrl={student.photoUrl}
-              firstName={student.firstName}
-              lastName={student.lastName}
+photoUrl={student.photo_url_c}
+              firstName={student.first_name_c}
+              lastName={student.last_name_c}
               size="lg"
             />
             <div>
               <h2 className="text-2xl font-bold">
-                {student.firstName} {student.lastName}
+                {student.first_name_c} {student.last_name_c}
               </h2>
-              <p className="text-blue-100">{student.studentId}</p>
+              <p className="text-blue-100">{student.student_id_c}</p>
               <div className="flex items-center space-x-2 mt-2">
-                <Badge variant={student.status === "active" ? "success" : "error"}>
-                  {student.status}
+                <Badge variant={student.status_c === "active" ? "success" : "error"}>
+                  {student.status_c}
                 </Badge>
-                <Badge variant="info">Grade {student.grade}</Badge>
-                <Badge variant="default">Section {student.section}</Badge>
+                <Badge variant="info">Grade {student.grade_c}</Badge>
+                <Badge variant="default">Section {student.section_c}</Badge>
               </div>
             </div>
           </div>
@@ -128,7 +128,7 @@ const StudentDetail = ({ isOpen, onClose, student }) => {
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
                   <div className="text-sm text-purple-600 mb-1">Total Subjects</div>
                   <div className="text-3xl font-bold text-purple-700">
-                    {loading ? "-" : [...new Set(grades.map(g => g.subject))].length}
+{loading ? "-" : [...new Set(grades.map(g => g.subject_c))].length}
                   </div>
                   <div className="text-sm text-purple-600">Active</div>
                 </div>
@@ -142,18 +142,18 @@ const StudentDetail = ({ isOpen, onClose, student }) => {
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                       <ApperIcon name="Mail" className="w-4 h-4 text-blue-600" />
                     </div>
-                    <div>
+<div>
                       <div className="text-sm text-gray-500">Email</div>
-                      <div className="font-medium">{student.email || "Not provided"}</div>
+                      <div className="font-medium">{student.email_c || "Not provided"}</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
                       <ApperIcon name="Phone" className="w-4 h-4 text-green-600" />
                     </div>
-                    <div>
+<div>
                       <div className="text-sm text-gray-500">Phone</div>
-                      <div className="font-medium">{student.phone || "Not provided"}</div>
+                      <div className="font-medium">{student.phone_c || "Not provided"}</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -162,8 +162,8 @@ const StudentDetail = ({ isOpen, onClose, student }) => {
                     </div>
                     <div>
                       <div className="text-sm text-gray-500">Enrollment Date</div>
-                      <div className="font-medium">
-                        {student.enrollmentDate ? format(new Date(student.enrollmentDate), "MMM dd, yyyy") : "Not available"}
+<div className="font-medium">
+                        {student.enrollment_date_c ? format(new Date(student.enrollment_date_c), "MMM dd, yyyy") : "Not available"}
                       </div>
                     </div>
                   </div>
@@ -284,21 +284,21 @@ const StudentDetail = ({ isOpen, onClose, student }) => {
                         }
                       }}
                       series={(() => {
-                        const gradesBySubject = grades.reduce((acc, grade) => {
-                          if (!acc[grade.subject]) acc[grade.subject] = [];
-                          acc[grade.subject].push(grade);
+const gradesBySubject = grades.reduce((acc, grade) => {
+                          if (!acc[grade.subject_c]) acc[grade.subject_c] = [];
+                          acc[grade.subject_c].push(grade);
                           return acc;
                         }, {});
 
                         Object.keys(gradesBySubject).forEach(subject => {
-                          gradesBySubject[subject].sort((a, b) => new Date(a.date) - new Date(b.date));
+                          gradesBySubject[subject].sort((a, b) => new Date(a.date_c) - new Date(b.date_c));
                         });
 
                         return Object.entries(gradesBySubject).map(([subject, subjectGrades]) => ({
                           name: subject,
                           data: subjectGrades.map(g => ({
-                            x: new Date(g.date).getTime(),
-                            y: Math.round((g.score / g.maxScore) * 100)
+                            x: new Date(g.date_c).getTime(),
+                            y: Math.round((g.score_c / g.max_score_c) * 100)
                           }))
                         }));
                       })()}
@@ -326,19 +326,19 @@ const StudentDetail = ({ isOpen, onClose, student }) => {
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
+<tbody className="bg-white divide-y divide-gray-200">
                         {grades.map(grade => {
-                          const percentage = Math.round((grade.score / grade.maxScore) * 100);
+                          const percentage = Math.round((grade.score_c / grade.max_score_c) * 100);
                           const letterGrade = percentage >= 90 ? "A" : percentage >= 80 ? "B" : percentage >= 70 ? "C" : percentage >= 60 ? "D" : "F";
                           const gradeVariant = percentage >= 80 ? "success" : percentage >= 70 ? "warning" : "error";
                           
                           return (
                             <tr key={grade.Id}>
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                {grade.subject}
+                                {grade.subject_c}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {grade.score}/{grade.maxScore}
+                                {grade.score_c} / {grade.max_score_c}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <Badge variant={gradeVariant}>
@@ -346,7 +346,7 @@ const StudentDetail = ({ isOpen, onClose, student }) => {
                                 </Badge>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {format(new Date(grade.date), "MMM dd, yyyy")}
+                                {format(new Date(grade.date_c), "MMM dd, yyyy")}
                               </td>
                             </tr>
                           );
@@ -392,23 +392,23 @@ const StudentDetail = ({ isOpen, onClose, student }) => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {attendance
-                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+{attendance
+                        .sort((a, b) => new Date(b.date_c) - new Date(a.date_c))
                         .map(record => {
-                          const statusVariant = record.status === "present" ? "success" : record.status === "late" ? "warning" : "error";
+                          const statusVariant = record.status_c === "present" ? "success" : record.status_c === "late" ? "warning" : "error";
                           
                           return (
                             <tr key={record.Id}>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {format(new Date(record.date), "MMM dd, yyyy")}
+                                {format(new Date(record.date_c), "MMM dd, yyyy")}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <Badge variant={statusVariant}>
-                                  {record.status}
+                                  {record.status_c}
                                 </Badge>
                               </td>
                               <td className="px-6 py-4 text-sm text-gray-500">
-                                {record.notes || "-"}
+                                {record.notes_c || "-"}
                               </td>
                             </tr>
                           );

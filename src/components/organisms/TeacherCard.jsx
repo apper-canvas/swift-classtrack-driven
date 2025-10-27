@@ -4,7 +4,7 @@ import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
 
 const TeacherCard = ({ teacher, onView, onEdit, onDelete }) => {
-  const experienceYears = teacher.experienceYears || 0;
+const experienceYears = teacher.experience_years_c || 0;
   const experienceBadge = experienceYears >= 10 ? "success" : experienceYears >= 5 ? "info" : "default";
 
   return (
@@ -12,21 +12,21 @@ const TeacherCard = ({ teacher, onView, onEdit, onDelete }) => {
       {/* Teacher Info Header */}
       <div className="flex items-center space-x-3 mb-4">
         <StudentAvatar 
-          photoUrl={teacher.photoUrl}
-          firstName={teacher.firstName}
-          lastName={teacher.lastName}
+photoUrl={teacher.photo_url_c}
+          firstName={teacher.first_name_c}
+          lastName={teacher.last_name_c}
         />
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 truncate">
-            {teacher.firstName} {teacher.lastName}
+{teacher.first_name_c} {teacher.last_name_c}
           </h3>
-          <p className="text-sm text-gray-500">{teacher.department}</p>
+          <p className="text-sm text-gray-500">{teacher.department_c}</p>
           <div className="flex items-center space-x-2 mt-1">
-            <Badge variant="info">{teacher.specialization}</Badge>
+            <Badge variant="info">{teacher.specialization_c}</Badge>
           </div>
         </div>
-        <Badge variant={teacher.employmentStatus === "full-time" ? "success" : "warning"}>
-          {teacher.employmentStatus}
+<Badge variant={teacher.employment_status_c === "full-time" ? "success" : "warning"}>
+          {teacher.employment_status_c}
         </Badge>
       </div>
 
@@ -34,7 +34,7 @@ const TeacherCard = ({ teacher, onView, onEdit, onDelete }) => {
       <div className="space-y-2 mb-4">
         <div className="flex items-center text-sm text-gray-600">
           <ApperIcon name="Award" className="w-4 h-4 mr-2 text-gray-400" />
-          <span className="truncate">{teacher.qualifications}</span>
+<span className="truncate">{teacher.qualifications_c}</span>
         </div>
         <div className="flex items-center text-sm text-gray-600">
           <ApperIcon name="Calendar" className="w-4 h-4 mr-2 text-gray-400" />
@@ -44,16 +44,16 @@ const TeacherCard = ({ teacher, onView, onEdit, onDelete }) => {
 
       {/* Contact Info */}
       <div className="space-y-2 mb-4">
-        {teacher.email && (
+{teacher.email_c && (
           <div className="flex items-center text-sm text-gray-600">
             <ApperIcon name="Mail" className="w-4 h-4 mr-2 text-gray-400" />
-            <span className="truncate">{teacher.email}</span>
+            <span className="truncate">{teacher.email_c}</span>
           </div>
         )}
-        {teacher.phone && (
+        {teacher.phone_c && (
           <div className="flex items-center text-sm text-gray-600">
             <ApperIcon name="Phone" className="w-4 h-4 mr-2 text-gray-400" />
-            <span>{teacher.phone}</span>
+            <span>{teacher.phone_c}</span>
           </div>
         )}
       </div>

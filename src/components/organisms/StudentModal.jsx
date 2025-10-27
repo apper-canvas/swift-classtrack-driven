@@ -9,39 +9,39 @@ import StudentAvatar from "@/components/molecules/StudentAvatar";
 
 const StudentModal = ({ isOpen, onClose, student, onSave, mode = "create" }) => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    studentId: "",
-    grade: "",
-    section: "",
-    email: "",
-    phone: "",
-    photoUrl: ""
+    first_name_c: "",
+    last_name_c: "",
+    student_id_c: "",
+    grade_c: "",
+    section_c: "",
+    email_c: "",
+    phone_c: "",
+    photo_url_c: ""
   });
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+useEffect(() => {
     if (student && mode === "edit") {
       setFormData({
-        firstName: student.firstName || "",
-        lastName: student.lastName || "",
-        studentId: student.studentId || "",
-        grade: student.grade || "",
-        section: student.section || "",
-        email: student.email || "",
-        phone: student.phone || "",
-        photoUrl: student.photoUrl || ""
+        first_name_c: student.first_name_c || "",
+        last_name_c: student.last_name_c || "",
+        student_id_c: student.student_id_c || "",
+        grade_c: student.grade_c || "",
+        section_c: student.section_c || "",
+        email_c: student.email_c || "",
+        phone_c: student.phone_c || "",
+        photo_url_c: student.photo_url_c || ""
       });
     } else if (mode === "create") {
       setFormData({
-        firstName: "",
-        lastName: "",
-        studentId: "",
-        grade: "",
-        section: "",
-        email: "",
-        phone: "",
-        photoUrl: ""
+        first_name_c: "",
+        last_name_c: "",
+        student_id_c: "",
+        grade_c: "",
+        section_c: "",
+        email_c: "",
+        phone_c: "",
+        photo_url_c: ""
       });
     }
   }, [student, mode, isOpen]);
@@ -49,7 +49,7 @@ const StudentModal = ({ isOpen, onClose, student, onSave, mode = "create" }) => 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.studentId.trim()) {
+if (!formData.first_name_c.trim() || !formData.last_name_c.trim() || !formData.student_id_c.trim()) {
       return;
     }
 
@@ -90,10 +90,10 @@ const StudentModal = ({ isOpen, onClose, student, onSave, mode = "create" }) => 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Photo Section */}
           <div className="flex items-center space-x-4">
-            <StudentAvatar
-              photoUrl={formData.photoUrl}
-              firstName={formData.firstName}
-              lastName={formData.lastName}
+<StudentAvatar
+              photoUrl={formData.photo_url_c}
+              firstName={formData.first_name_c}
+              lastName={formData.last_name_c}
               size="xl"
             />
             <div className="flex-1">
@@ -101,8 +101,8 @@ const StudentModal = ({ isOpen, onClose, student, onSave, mode = "create" }) => 
               <Input
                 type="url"
                 placeholder="https://example.com/photo.jpg"
-                value={formData.photoUrl}
-                onChange={(e) => handleChange("photoUrl", e.target.value)}
+value={formData.photo_url_c}
+                onChange={(e) => handleChange("photo_url_c", e.target.value)}
               />
               <p className="text-xs text-gray-500 mt-1">
                 Enter a URL for the student's photo (optional)
@@ -114,22 +114,22 @@ const StudentModal = ({ isOpen, onClose, student, onSave, mode = "create" }) => 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label>First Name *</Label>
-              <Input
+<Input
                 type="text"
                 required
                 placeholder="Enter first name"
-                value={formData.firstName}
-                onChange={(e) => handleChange("firstName", e.target.value)}
+                value={formData.first_name_c}
+                onChange={(e) => handleChange("first_name_c", e.target.value)}
               />
             </div>
             <div>
               <Label>Last Name *</Label>
               <Input
-                type="text"
+type="text"
                 required
                 placeholder="Enter last name"
-                value={formData.lastName}
-                onChange={(e) => handleChange("lastName", e.target.value)}
+                value={formData.last_name_c}
+                onChange={(e) => handleChange("last_name_c", e.target.value)}
               />
             </div>
           </div>
@@ -137,20 +137,21 @@ const StudentModal = ({ isOpen, onClose, student, onSave, mode = "create" }) => 
           {/* Academic Information */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <Label>Student ID *</Label>
+<Label>Student ID *</Label>
               <Input
                 type="text"
                 required
                 placeholder="ST001"
-                value={formData.studentId}
+                value={formData.student_id_c}
+                onChange={(e) => handleChange("student_id_c", e.target.value)}
                 onChange={(e) => handleChange("studentId", e.target.value)}
               />
             </div>
             <div>
               <Label>Grade</Label>
               <Select
-                value={formData.grade}
-                onChange={(e) => handleChange("grade", e.target.value)}
+value={formData.grade_c}
+                onChange={(e) => handleChange("grade_c", e.target.value)}
               >
                 <option value="">Select grade</option>
                 {[...Array(12)].map((_, i) => (
@@ -160,8 +161,9 @@ const StudentModal = ({ isOpen, onClose, student, onSave, mode = "create" }) => 
             </div>
             <div>
               <Label>Section</Label>
-              <Select
-                value={formData.section}
+<Select
+                value={formData.section_c}
+                onChange={(e) => handleChange("section_c", e.target.value)}
                 onChange={(e) => handleChange("section", e.target.value)}
               >
                 <option value="">Select section</option>
@@ -178,8 +180,9 @@ const StudentModal = ({ isOpen, onClose, student, onSave, mode = "create" }) => 
               <Label>Email</Label>
               <Input
                 type="email"
-                placeholder="student@school.edu"
-                value={formData.email}
+placeholder="student@school.edu"
+                value={formData.email_c}
+                onChange={(e) => handleChange("email_c", e.target.value)}
                 onChange={(e) => handleChange("email", e.target.value)}
               />
             </div>
@@ -187,8 +190,9 @@ const StudentModal = ({ isOpen, onClose, student, onSave, mode = "create" }) => 
               <Label>Phone</Label>
               <Input
                 type="tel"
-                placeholder="(555) 123-4567"
-                value={formData.phone}
+placeholder="(555) 123-4567"
+                value={formData.phone_c}
+                onChange={(e) => handleChange("phone_c", e.target.value)}
                 onChange={(e) => handleChange("phone", e.target.value)}
               />
             </div>

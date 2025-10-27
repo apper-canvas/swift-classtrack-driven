@@ -93,18 +93,18 @@ const Teachers = () => {
   };
 
   // Filter teachers based on search term
-  const filteredTeachers = useMemo(() => {
+const filteredTeachers = useMemo(() => {
     if (!searchTerm) return teachers;
     
     return teachers.filter(teacher => {
-      const fullName = `${teacher.firstName} ${teacher.lastName}`.toLowerCase();
+      const fullName = `${teacher.first_name_c || ""} ${teacher.last_name_c || ""}`.toLowerCase();
       const searchLower = searchTerm.toLowerCase();
       
       return (
         fullName.includes(searchLower) ||
-        teacher.email?.toLowerCase().includes(searchLower) ||
-        teacher.department?.toLowerCase().includes(searchLower) ||
-        teacher.specialization?.toLowerCase().includes(searchLower)
+        teacher.email_c?.toLowerCase().includes(searchLower) ||
+        teacher.department_c?.toLowerCase().includes(searchLower) ||
+        teacher.specialization_c?.toLowerCase().includes(searchLower)
       );
     });
   }, [teachers, searchTerm]);
@@ -199,7 +199,7 @@ const Teachers = () => {
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Confirm Delete</h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete {deleteConfirm.firstName} {deleteConfirm.lastName}? 
+Are you sure you want to delete {deleteConfirm.first_name_c} {deleteConfirm.last_name_c}? 
               This action cannot be undone.
             </p>
             <div className="flex space-x-3 justify-end">
