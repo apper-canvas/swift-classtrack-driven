@@ -1,37 +1,37 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
-import { studentService } from "@/services/api/studentService";
-import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
-import StudentModal from "@/components/organisms/StudentModal";
-import StudentDetail from "@/components/organisms/StudentDetail";
-import StudentList from "@/components/organisms/StudentList";
+import TeacherList from "@/components/organisms/TeacherList";
+import TeacherModal from "@/components/organisms/TeacherModal";
+import TeacherDetail from "@/components/organisms/TeacherDetail";
 import Loading from "@/components/ui/Loading";
-import Empty from "@/components/ui/Empty";
 import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
 import SearchBar from "@/components/molecules/SearchBar";
+import Button from "@/components/atoms/Button";
+import ApperIcon from "@/components/ApperIcon";
+import { teacherService } from "@/services/api/teacherService";
 
-const Students = () => {
-  const [students, setStudents] = useState([]);
+const Teachers = () => {
+  const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   useEffect(() => {
-    loadStudents();
+    loadTeachers();
   }, []);
 
-  const loadStudents = async () => {
+  const loadTeachers = async () => {
     try {
       setLoading(true);
       setError("");
-      const data = await studentService.getAll();
-      setStudents(data);
+      const data = await teacherService.getAll();
+      setTeachers(data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -39,87 +39,86 @@ const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
     }
   };
 
-  const handleAddStudent = async (studentData) => {
+  const handleAddTeacher = async (teacherData) => {
     try {
-      const newStudent = await studentService.create(studentData);
-      setStudents(prev => [newStudent, ...prev]);
-      toast.success("Student added successfully!");
+      const newTeacher = await teacherService.create(teacherData);
+      setTeachers(prev => [newTeacher, ...prev]);
+      toast.success("Teacher added successfully!");
     } catch (err) {
-      toast.error("Failed to add student");
+      toast.error("Failed to add teacher");
       throw err;
     }
   };
 
-  const handleEditStudent = async (studentData) => {
+  const handleEditTeacher = async (teacherData) => {
     try {
-      const updatedStudent = await studentService.update(selectedStudent.Id, studentData);
-      setStudents(prev => prev.map(s => s.Id === updatedStudent.Id ? updatedStudent : s));
-      toast.success("Student updated successfully!");
+      const updatedTeacher = await teacherService.update(selectedTeacher.Id, teacherData);
+      setTeachers(prev => prev.map(t => t.Id === updatedTeacher.Id ? updatedTeacher : t));
+      toast.success("Teacher updated successfully!");
     } catch (err) {
-      toast.error("Failed to update student");
+      toast.error("Failed to update teacher");
       throw err;
     }
   };
 
-  const handleDeleteStudent = async () => {
+  const handleDeleteTeacher = async () => {
     if (!deleteConfirm) return;
 
     try {
-      await studentService.delete(deleteConfirm.Id);
-      setStudents(prev => prev.filter(s => s.Id !== deleteConfirm.Id));
-      toast.success("Student deleted successfully!");
+      await teacherService.delete(deleteConfirm.Id);
+      setTeachers(prev => prev.filter(t => t.Id !== deleteConfirm.Id));
+      toast.success("Teacher deleted successfully!");
       setDeleteConfirm(null);
     } catch (err) {
-      toast.error("Failed to delete student");
+      toast.error("Failed to delete teacher");
     }
   };
 
-  const handleViewStudent = (student) => {
-    setSelectedStudent(student);
+  const handleViewTeacher = (teacher) => {
+    setSelectedTeacher(teacher);
     setIsDetailModalOpen(true);
   };
 
-  const handleEditClick = (student) => {
-    setSelectedStudent(student);
+  const handleEditClick = (teacher) => {
+    setSelectedTeacher(teacher);
     setIsEditModalOpen(true);
   };
 
-  const handleDeleteClick = (student) => {
-    setDeleteConfirm(student);
-};
+  const handleDeleteClick = (teacher) => {
+    setDeleteConfirm(teacher);
+  };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
 
-  // Filter students based on search term
-  const filteredStudents = useMemo(() => {
-    if (!searchTerm) return students;
+  // Filter teachers based on search term
+  const filteredTeachers = useMemo(() => {
+    if (!searchTerm) return teachers;
     
-    return students.filter(student => {
-      const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
+    return teachers.filter(teacher => {
+      const fullName = `${teacher.firstName} ${teacher.lastName}`.toLowerCase();
       const searchLower = searchTerm.toLowerCase();
       
       return (
         fullName.includes(searchLower) ||
-        student.studentId.toLowerCase().includes(searchLower) ||
-        student.email?.toLowerCase().includes(searchLower) ||
-        student.grade.includes(searchTerm) ||
-        student.section.toLowerCase().includes(searchLower)
+        teacher.email?.toLowerCase().includes(searchLower) ||
+        teacher.department?.toLowerCase().includes(searchLower) ||
+        teacher.specialization?.toLowerCase().includes(searchLower)
       );
     });
-  }, [students, searchTerm]);
+  }, [teachers, searchTerm]);
 
   if (loading) return <Loading type="cards" />;
   
-  if (error) return <Error message={error} onRetry={loadStudents} />;
+  if (error) return <Error message={error} onRetry={loadTeachers} />;
 
-if (students.length === 0) {
+  if (teachers.length === 0) {
     return (
       <Empty
-        title="No students found"
-        description="Get started by adding your first student to the system."
-        actionLabel="Add First Student"
+        title="No teachers found"
+        description="Get started by adding your first teacher to the system."
+        actionLabel="Add First Teacher"
         onAction={() => setIsAddModalOpen(true)}
       />
     );
@@ -130,9 +129,9 @@ if (students.length === 0) {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Students</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Teachers</h1>
           <p className="text-gray-600">
-            Manage your class roster and student information
+            Manage your faculty and teacher information
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -141,26 +140,26 @@ if (students.length === 0) {
           </div>
           <Button onClick={() => setIsAddModalOpen(true)} className="hidden sm:flex">
             <ApperIcon name="Plus" className="w-4 h-4 mr-2" />
-            Add Student
+            Add Teacher
           </Button>
         </div>
       </div>
 
-      {/* Student List */}
-      {filteredStudents.length === 0 && searchTerm ? (
+      {/* Teacher List */}
+      {filteredTeachers.length === 0 && searchTerm ? (
         <div className="text-center py-12">
           <div className="text-gray-500">
-            No students found for "{searchTerm}"
+            No teachers found for "{searchTerm}"
           </div>
         </div>
       ) : (
-        <StudentList
-          students={filteredStudents}
-          onView={handleViewStudent}
+        <TeacherList
+          teachers={filteredTeachers}
+          onView={handleViewTeacher}
           onEdit={handleEditClick}
           onDelete={handleDeleteClick}
         />
-)}
+      )}
 
       {/* Floating Action Button (Mobile) */}
       <button
@@ -170,28 +169,28 @@ if (students.length === 0) {
         <ApperIcon name="Plus" className="w-6 h-6" />
       </button>
 
-      {/* Add Student Modal */}
-      <StudentModal
+      {/* Add Teacher Modal */}
+      <TeacherModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onSave={handleAddStudent}
+        onSave={handleAddTeacher}
         mode="create"
       />
 
-      {/* Edit Student Modal */}
-      <StudentModal
+      {/* Edit Teacher Modal */}
+      <TeacherModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        student={selectedStudent}
-        onSave={handleEditStudent}
+        teacher={selectedTeacher}
+        onSave={handleEditTeacher}
         mode="edit"
       />
 
-      {/* Student Detail Modal */}
-      <StudentDetail
+      {/* Teacher Detail Modal */}
+      <TeacherDetail
         isOpen={isDetailModalOpen}
         onClose={() => setIsDetailModalOpen(false)}
-        student={selectedStudent}
+        teacher={selectedTeacher}
       />
 
       {/* Delete Confirmation Modal */}
@@ -211,7 +210,7 @@ if (students.length === 0) {
                 Cancel
               </button>
               <button
-                onClick={handleDeleteStudent}
+                onClick={handleDeleteTeacher}
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
               >
                 Delete
@@ -224,4 +223,4 @@ if (students.length === 0) {
   );
 };
 
-export default Students;
+export default Teachers;

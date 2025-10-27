@@ -1,15 +1,13 @@
 import React, { useState, Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { router } from "@/router";
+import Students from "@/components/pages/Students";
+import Dashboard from "@/components/pages/Dashboard";
 import Layout from "@/components/organisms/Layout";
-import Students from "@/pages/Students";
-import Dashboard from "@/pages/Dashboard";
-import NotFound from "@/pages/NotFound";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
+  
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
@@ -24,7 +22,7 @@ function App() {
       path: "/",
       element: (
         <Layout 
-          onSearch={handleSearch} 
+          onSearch={handleSearch}
           onAddStudent={handleAddStudent}
         />
       ),
@@ -47,14 +45,6 @@ function App() {
           element: (
             <Suspense fallback={<div>Loading.....</div>}>
               <Dashboard />
-            </Suspense>
-          ),
-        },
-        {
-          path: "*",
-          element: (
-            <Suspense fallback={<div>Loading.....</div>}>
-              <NotFound />
             </Suspense>
           ),
         },

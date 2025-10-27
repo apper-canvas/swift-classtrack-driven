@@ -4,6 +4,7 @@ import Layout from "@/components/organisms/Layout";
 
 const Students = lazy(() => import("@/components/pages/Students"));
 const Dashboard = lazy(() => import("@/components/pages/Dashboard"));
+const Teachers = lazy(() => import("@/components/pages/Teachers"));
 const NotFound = lazy(() => import("@/components/pages/NotFound"));
 
 const mainRoutes = [
@@ -21,6 +22,14 @@ const mainRoutes = [
     element: (
       <Suspense fallback={<div>Loading.....</div>}>
         <Dashboard />
+      </Suspense>
+    ),
+},
+  {
+    path: "teachers",
+    element: (
+      <Suspense fallback={<div>Loading.....</div>}>
+        <Teachers />
       </Suspense>
     ),
   },

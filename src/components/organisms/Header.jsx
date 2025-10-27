@@ -1,15 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ApperIcon from "@/components/ApperIcon";
-import SearchBar from "@/components/molecules/SearchBar";
 import Button from "@/components/atoms/Button";
+import SearchBar from "@/components/molecules/SearchBar";
 
-const Header = ({ onSearch, onAddStudent }) => {
-  const location = useLocation();
+const Header = () => {
+const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { path: "", label: "Students", icon: "Users" },
+    { path: "", label: "Students", icon: "GraduationCap" },
+    { path: "teachers", label: "Teachers", icon: "Users" },
     { path: "dashboard", label: "Dashboard", icon: "BarChart3" }
   ];
 
@@ -47,19 +48,8 @@ const Header = ({ onSearch, onAddStudent }) => {
             ))}
           </nav>
 
-          {/* Search and Actions */}
+{/* Search and Actions */}
           <div className="flex items-center space-x-4">
-            {currentPath === "" && (
-              <div className="hidden sm:block">
-                <SearchBar onSearch={onSearch} />
-              </div>
-            )}
-            
-            <Button onClick={onAddStudent} className="hidden sm:flex">
-              <ApperIcon name="Plus" className="w-4 h-4 mr-2" />
-              Add Student
-            </Button>
-
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -69,14 +59,6 @@ const Header = ({ onSearch, onAddStudent }) => {
             </button>
           </div>
         </div>
-
-        {/* Mobile Search */}
-        {currentPath === "" && (
-          <div className="sm:hidden pb-4">
-            <SearchBar onSearch={onSearch} />
-          </div>
-        )}
-
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 pt-4 pb-4">
@@ -102,12 +84,6 @@ const Header = ({ onSearch, onAddStudent }) => {
       </div>
 
       {/* Floating Add Button for Mobile */}
-      <button
-        onClick={onAddStudent}
-        className="sm:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center z-50 hover:bg-blue-700 transition-colors duration-200"
-      >
-        <ApperIcon name="Plus" className="w-6 h-6" />
-      </button>
     </header>
   );
 };
